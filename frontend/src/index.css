@@ -1,0 +1,143 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html, body, #root { @apply h-full; }
+
+  body {
+    @apply bg-slate-50 text-slate-800 antialiased font-sans text-[14px];
+    background-image: radial-gradient(1200px 600px at 85% -10%, rgba(37, 99, 235, 0.04), transparent 60%);
+    background-attachment: fixed;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  /* Dark mode root styles */
+  .dark body {
+    @apply bg-slate-950 text-slate-100;
+    background-image: radial-gradient(1200px 600px at 85% -10%, rgba(37, 99, 235, 0.09), transparent 60%);
+  }
+
+  ::-webkit-scrollbar { width: 7px; height: 7px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { @apply bg-slate-300 rounded-full; }
+  ::-webkit-scrollbar-thumb:hover { @apply bg-slate-400; }
+
+  .dark ::-webkit-scrollbar-thumb { @apply bg-slate-700; }
+  .dark ::-webkit-scrollbar-thumb:hover { @apply bg-slate-600; }
+
+  :focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+}
+
+@layer components {
+  /* ── Surfaces ───────────────────────────────────────────────────────── */
+  .card {
+    @apply bg-white border border-slate-200/90 rounded-xl p-5 shadow-sm;
+    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .dark .card {
+    @apply bg-slate-900 border-slate-800 text-slate-100 shadow-none;
+  }
+
+  .card-hover {
+    @apply transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md hover:shadow-slate-200/60;
+  }
+  .dark .card-hover {
+    @apply hover:border-slate-700 hover:shadow-md hover:shadow-black/50;
+  }
+
+  .inset-box {
+    @apply bg-slate-50 border border-slate-200/80 rounded-lg;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+  }
+  .dark .inset-box {
+    @apply bg-slate-950/70 border-slate-800 text-slate-200;
+  }
+
+  /* ── Typography helpers ─────────────────────────────────────────────── */
+  .section-title { @apply text-base font-semibold text-slate-900; }
+  .dark .section-title { @apply text-slate-100; }
+
+  .eyebrow { @apply text-[11px] font-semibold uppercase tracking-wider text-slate-500; }
+  .dark .eyebrow { @apply text-slate-400; }
+
+  /* ── Buttons ────────────────────────────────────────────────────────── */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-medium
+           px-4 py-2 rounded-lg transition-all duration-150 shadow-sm active:scale-[0.98]
+           disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 bg-white hover:bg-slate-50 border border-slate-200/90 text-slate-700
+           hover:text-slate-900 font-medium px-4 py-2 rounded-lg transition-all duration-150 shadow-sm active:scale-[0.98]
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .dark .btn-ghost {
+    @apply bg-slate-900 hover:bg-slate-800 border-slate-700 text-slate-200 hover:text-white shadow-none;
+  }
+
+  .btn-danger {
+    @apply inline-flex items-center justify-center gap-2 bg-rose-600 hover:bg-rose-700 text-white font-medium
+           px-4 py-2 rounded-lg transition-all duration-150 shadow-sm active:scale-[0.98] disabled:opacity-50;
+  }
+  .icon-btn {
+    @apply inline-flex h-8 w-8 items-center justify-center rounded-lg text-slate-500 transition-colors
+           hover:bg-slate-100 hover:text-slate-900 disabled:opacity-40;
+  }
+  .dark .icon-btn {
+    @apply text-slate-400 hover:bg-slate-800 hover:text-slate-100;
+  }
+
+  /* ── Form ───────────────────────────────────────────────────────────── */
+  .input {
+    @apply w-full bg-white border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 rounded-lg px-3 py-2 text-sm
+           text-slate-900 placeholder-slate-400 outline-none transition-all;
+  }
+  .dark .input {
+    @apply bg-slate-900 border-slate-700 text-slate-100 placeholder-slate-500 focus:border-blue-400 focus:ring-blue-500/20;
+  }
+
+  /* ── Badges ─────────────────────────────────────────────────────────── */
+  .badge-critical { @apply bg-rose-50 text-rose-700 border border-rose-200 text-xs font-semibold px-2 py-0.5 rounded-full; }
+  .badge-high     { @apply bg-orange-50 text-orange-700 border border-orange-200 text-xs font-semibold px-2 py-0.5 rounded-full; }
+  .badge-medium   { @apply bg-amber-50 text-amber-700 border border-amber-200 text-xs font-semibold px-2 py-0.5 rounded-full; }
+  .badge-low      { @apply bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-semibold px-2 py-0.5 rounded-full; }
+  .badge-info     { @apply bg-slate-100 text-slate-700 border border-slate-200 text-xs font-semibold px-2 py-0.5 rounded-full; }
+
+  .dark .badge-critical { @apply bg-rose-950/60 text-rose-300 border-rose-800/80; }
+  .dark .badge-high     { @apply bg-orange-950/60 text-orange-300 border-orange-800/80; }
+  .dark .badge-medium   { @apply bg-amber-950/60 text-amber-300 border-amber-800/80; }
+  .dark .badge-low      { @apply bg-emerald-950/60 text-emerald-300 border-emerald-800/80; }
+  .dark .badge-info     { @apply bg-slate-800 text-slate-300 border-slate-700; }
+
+  /* ── Skeleton loader ────────────────────────────────────────────────── */
+  .skeleton { @apply relative overflow-hidden rounded-md bg-slate-200/70; }
+  .skeleton::after {
+    content: ''; position: absolute; inset: 0; transform: translateX(-100%);
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+    animation: shimmer 1.4s infinite;
+  }
+  .dark .skeleton { @apply bg-slate-800/80; }
+  .dark .skeleton::after {
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+  }
+}
+
+/* React Flow – light canvas & dark canvas */
+.react-flow { --xy-background-color: #f8fafc; }
+.dark .react-flow { --xy-background-color: #020617; }
+
+.react-flow__attribution { background: transparent !important; opacity: .4; }
+.react-flow__controls-button { background: #ffffff; border-bottom: 1px solid #e2e8f0; fill: #475569; }
+.react-flow__controls-button:hover { background: #f1f5f9; }
+
+.dark .react-flow__controls-button { background: #0f172a; border-bottom: 1px solid #1e293b; fill: #94a3b8; }
+.dark .react-flow__controls-button:hover { background: #1e293b; fill: #f8fafc; }
+
+/* Respect users who ask for less motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important; animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
