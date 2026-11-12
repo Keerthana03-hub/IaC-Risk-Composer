@@ -1,155 +1,163 @@
 # IaC Risk Composer
 
-> **Cybersecurity platform for analysing Infrastructure-as-Code (IaC) and generating threat-model information.**
+A modern cybersecurity platform for analysing Infrastructure as Code (IaC) templates, identifying security risks, and generating actionable remediation guidance for cloud-native environments.
 
----
+The platform helps teams review Terraform, CloudFormation, and Kubernetes infrastructure definitions before deployment, surfacing misconfigurations, exposure paths, and risk-prone design patterns in a clear, developer-friendly interface.
 
-## Project Structure
+## Why this project exists
 
+Infrastructure definitions are often treated as code, but security review is frequently delayed until after deployment. IaC Risk Composer brings risk analysis earlier in the lifecycle by combining:
+
+- IaC parsing and normalization
+- Threat detection for common cloud misconfigurations
+- Infrastructure graph mapping
+- Risk scoring and attack-path analysis
+- Evidence-based explanations and safe remediation suggestions
+- Persistent project and report history for development teams
+
+## Key features
+
+- Terraform analysis with structure extraction and resource mapping
+- CloudFormation and Kubernetes support through a shared parser registry
+- Threat detection across common security categories such as public exposure, weak access control, unsafe encryption, and service exposure
+- Risk assessment using likelihood, impact, and confidence-based scoring
+- Attack-path analysis to identify how an exposed asset could lead to a sensitive target
+- Rule-based remediation recommendations and safe Terraform patch generation
+- Developer-friendly web UI for analysis, reports, history, and dashboard metrics
+- Multi-user project workspace with authentication and persisted analysis records
+
+## Architecture
+
+This application follows a modular architecture:
+
+- Frontend: React + Vite + Tailwind CSS
+- Backend: Python + FastAPI
+- Data layer: SQLite for local persistence
+- Analysis engine: parser registry, threat engine, infrastructure mapper, risk engine, and remediation engine
+
+## Project structure
+
+```text
+project/
+├── backend/
+│   ├── docs/
+│   ├── routers/
+│   ├── services/
+│   ├── tests/
+│   ├── database.py
+│   ├── main.py
+│   └── requirements.txt
+├── frontend/
+│   ├── src/
+│   ├── index.html
+│   ├── package.json
+│   ├── vite.config.js
+│   └── tailwind.config.js
+├── README.md
+└── .gitignore
 ```
-iac-risk-composer/
-├── frontend/           React + Vite + Tailwind CSS + React Router
-├── backend/            Python FastAPI REST API
-├── threat_engine/      (future) Rule-based Terraform / CloudFormation scanner
-├── ml_model/           (future) Custom ML risk-prediction model
-├── threat_templates/   (future) STRIDE / MITRE ATT&CK threat templates
-├── reports/            (future) Generated PDF / HTML reports
-└── README.md
-```
 
----
+## Technology stack
 
-## Quick Start
+| Layer | Technologies |
+| --- | --- |
+| Frontend | React, Vite, Tailwind CSS, React Router |
+| Backend | Python, FastAPI, Pydantic |
+| Persistence | SQLite |
+| IaC parsing | Python HCL parser, registry-based extensible parsers |
+| Reporting | PDF generation for security assessment exports |
 
-### Prerequisites
+## Prerequisites
 
-| Tool    | Version  |
-|---------|----------|
-| Node.js | ≥ 18     |
-| Python  | ≥ 3.11   |
-| pip     | latest   |
+- Node.js 18+
+- Python 3.11+
+- pip
 
----
+## Quick start
 
-### 1 – Start the Backend
+### 1. Start the backend
 
 ```bash
-cd iac-risk-composer/backend
+cd project/backend
 
-# Create and activate a virtual environment
-py -m venv .venv
+python -m venv .venv
+
 # Windows
 .venv\Scripts\activate
+
 # macOS / Linux
-source .venv/bin/activate
+# source .venv/bin/activate
 
-# Install dependencies
 pip install -r requirements.txt
-
-# Start the dev server (hot-reload)
 uvicorn main:app --reload --port 8000
 ```
 
-The API will be available at **http://localhost:8000**
+The API will be available at:
 
-Interactive docs (Swagger UI): **http://localhost:8000/docs**
+- http://localhost:8000
+- Swagger UI: http://localhost:8000/docs
 
----
-
-### 2 – Start the Frontend
+### 2. Start the frontend
 
 ```bash
-cd iac-risk-composer/frontend
-
-# Install dependencies
+cd project/frontend
 npm install
-
-# Start the Vite dev server
 npm run dev
 ```
 
-The app will be available at **http://localhost:5173**
+The application will be available at:
 
-> Vite proxies all `/api/*` requests to `http://localhost:8000` automatically —
-> no manual CORS configuration needed during development.
+- http://localhost:5173
 
----
+The frontend dev server is configured to proxy API requests to the backend automatically during local development.
 
-### Demo Credentials
+## Demo authentication
+
+A default development user is available for quick access:
 
 | Username | Password |
-|----------|----------|
-| admin    | admin    |
+| --- | --- |
+| admin | admin |
 
----
+## Main API endpoints
 
-## API Reference
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| GET | /api/health | Health check for the backend service |
+| POST | /api/auth/register | Register a new developer account |
+| POST | /api/auth/login | Authenticate and receive a token |
+| GET | /api/projects | List project workspaces |
+| POST | /api/projects | Create a project |
+| POST | /api/analyze | Submit IaC content for analysis |
+| GET | /api/reports | List saved analyses and reports |
+| GET | /api/reports/{report_id} | Retrieve a saved analysis |
+| POST | /api/report | Generate a downloadable PDF report |
+| GET | /api/dashboard/stats | Retrieve dashboard metrics |
 
-| Method | Path           | Description                        |
-|--------|----------------|------------------------------------|
-| GET    | `/api/health`  | Liveness probe – returns API version |
-| POST   | `/api/analyze` | Submit IaC content for analysis    |
+## Example analysis flow
 
-### POST /api/analyze – Request body
+1. Upload or define an IaC template
+2. Parse infrastructure resources and normalize them into a graph
+3. Detect mapping and threat patterns
+4. Score risks based on exposure and impact
+5. Generate evidence-supported explanations
+6. Provide remediation and safe patch suggestions
+7. Persist the analysis and export a report PDF
 
-```json
-{
-  "iac_content": "resource \"aws_s3_bucket\" ...",
-  "iac_type": "terraform",
-  "project_name": "my-project"
-}
-```
+## Notes on implementation
 
-`iac_type` accepts: `terraform` | `cloudformation` | `kubernetes` | `ansible`
+This project is designed as a functional security analysis prototype with a deterministic rule-based engine. It is suitable for local development, security assessment workflows, and iterative extension with additional parsers or LLM-based explanation providers in the future.
 
-### POST /api/analyze – Response (Phase 1 placeholder)
+## Contributing
 
-```json
-{
-  "status": "placeholder",
-  "message": "...",
-  "findings": [ { "id": "...", "severity": "HIGH", ... } ],
-  "risk_score": 72,
-  "iac_type": "terraform"
-}
-```
+Contributions are welcome. To keep the project maintainable:
 
----
+- keep backend services modular and focused
+- add tests for parsing, threat detection, and remediation logic
+- prefer deterministic security logic where evidence is required
+- document any new parser or rule additions clearly
 
-## Frontend Pages
+## License
 
-| Route        | Page             | Description                             |
-|--------------|------------------|-----------------------------------------|
-| `/login`     | Login            | Demo auth (admin / admin)               |
-| `/dashboard` | Dashboard        | Platform overview + API health check    |
-| `/analyze`   | IaC Analysis     | Submit IaC → view findings + risk score |
-| `/reports`   | Threat Reports   | List of generated reports (mocked)      |
-| `/history`   | Project History  | Chronological scan history (mocked)     |
-
----
-
-## Planned Features (Future Phases)
-
-- [ ] **Terraform parser** – HCL AST analysis via `python-hcl2`
-- [ ] **CloudFormation parser** – YAML/JSON template analysis
-- [ ] **Threat detection engine** – Rule-based finding engine in `threat_engine/`
-- [ ] **ML risk prediction** – Custom model in `ml_model/`
-- [ ] **AI/LLM explanations** – GPT / watsonx remediation advice
-- [ ] **Security control recommendations** – Mapped to CIS / NIST benchmarks
-- [ ] **GitHub PR integration** – Automated scan on pull-request webhook
-- [ ] **PDF report export** – Generated reports stored in `reports/`
-- [ ] **Persistent storage** – PostgreSQL via SQLAlchemy
-- [ ] **Real authentication** – JWT / Auth0 / Cognito
-
----
-
-## Development Notes
-
-- Backend CORS is configured to allow `http://localhost:5173` only. Update
-  `main.py` `allow_origins` for production deployments.
-- All mock/placeholder data is clearly labeled with comments and UI notices.
-- The `threat_engine/`, `ml_model/`, `threat_templates/`, and `reports/`
-  directories each contain a `README.md` describing what will go there.
-
-# IaC-Risk-Composer
+This project is intended for internal or educational use unless otherwise specified by the owning organization.
 
