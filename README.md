@@ -150,3 +150,6 @@ The app will be available at **http://localhost:5173**
 - All mock/placeholder data is clearly labeled with comments and UI notices.
 - The `threat_engine/`, `ml_model/`, `threat_templates/`, and `reports/`
   directories each contain a `README.md` describing what will go there.
+
+# IaC-Risk-Composer
+
